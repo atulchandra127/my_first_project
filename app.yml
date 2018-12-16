@@ -1,0 +1,5 @@
+---
+ - name: install docker
+   hosts: atul_api
+   roles:
+    - common/docker

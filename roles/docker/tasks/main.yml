@@ -1,0 +1,73 @@
+---
+
+  - debug:
+      msg: "OS is {{ ansible_distribution }}"
+
+  - name: apt update to install curl
+    become: true
+    command: apt-get update
+    when:
+          - '"CoreOS" not in ansible_distribution'
+  - name: install curl
+    command: sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+    when:
+          - '"CoreOS" not in ansible_distribution'
+  - name: add deb repo
+    become: true
+    apt_key:
+      url: "https://download.docker.com/linux/ubuntu/gpg"
+      state: present
+    when:
+          - '"CoreOS" not in ansible_distribution'
+  - name: update repo
+    command: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+  - name: apt update to adding new repo
+    command: sudo apt-get update
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+  - name: install docker
+    command: sudo apt-get -y install docker-ce
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+#  - name: add user mod
+#    command: sudo usermod -aG docker {{remote_user}}
+  - name: add user mod
+    command: sudo usermod -aG docker {{action_user}}
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+  - name: add permissions to docker sock for ruby
+    become: true
+    file:
+      path: /var/run/docker.sock
+      owner: ruby
+      group: docker
+      mode: 0644
+
+  - name: install pip
+    become: true
+    command: apt-get -y install python-pip
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+  - name: install docker-py
+    become: true
+    environment:
+        LANGUAGE: en_US.UTF-8
+        LANG: en_US.UTF-8
+        LC_ALL: en_US.UTF-8
+    command: pip install docker-py
+    when:
+          - '"CoreOS" not in ansible_distribution'
+
+  - name: docker login to quay.io
+    command: docker login -u={{quay_user}} -p={{quay_password}} quay.io
+
+  - name: creating new network
+    command: sudo docker network create kreatio_network --subnet 190.10.0.0/24 --gateway 190.10.0.1
+    ignore_errors: yes
