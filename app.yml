@@ -1,5 +1,10 @@
 ---
- - name: install docker
-   hosts: atul_api
+ - name: install apache using compose
+   hosts: msr1
    roles:
-    - common/docker
+    - api/apache
+
+ - name: install couchdb using compose
+   hosts: msr2
+   roles:
+    - api/couchdb

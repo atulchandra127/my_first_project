@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  apache:
+    image: 'bitnami/apache:latest'
+    ports:
+      - '80:8081'
+      - '443:8443'
+    environment:
+      - APACHE_HTTP_PORT_NUMBER=8081
