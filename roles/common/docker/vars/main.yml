@@ -1,0 +1,2 @@
+remote_user: ubuntu
+action_user: "{{ ansible_user }}"

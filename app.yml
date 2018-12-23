@@ -8,3 +8,13 @@
    hosts: msr2
    roles:
     - api/couchdb
+
+ - name: install docker
+   hosts: atul1
+   roles:
+    - common/docker
+
+ - name: install nodejs
+   hosts: atul1
+   roles:
+     - common/node

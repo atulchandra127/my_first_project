@@ -1,0 +1,19 @@
+---
+  - name: update
+    command: sudo apt update
+
+  # - name: Install cURL on Debian-flavours
+  # apt:
+  #   name: curl
+  #   state: "{{ 'latest' if curl_pkg_state_latest else 'present' }}"
+  #   update_cache: "{{ curl_update_pkg_mgr }}"
+  # when: ansible_pkg_mgr == 'apt'
+
+  - name: curl installation
+    command: sudo apt install curl -y
+
+  - name: installation through curl
+    shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -"
+
+  - name: nodejs installation
+    command: sudo apt install nodejs -y

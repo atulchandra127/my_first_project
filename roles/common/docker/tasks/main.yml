@@ -1,0 +1,38 @@
+---
+  - name: Test if docker is installed
+    command: docker
+    register: result
+    ignore_errors: True
+
+  - debug:
+      msg: "OS is {{ ansible_distribution }}"
+
+  - name: apt update to install curl
+    become: true
+    command: apt-get update
+
+  - name: install curl
+    command: sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+
+  - name: add key
+    shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+
+  - name: update repo
+    command: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+
+  - name: apt update to adding new repo
+    command: sudo apt-get update
+
+  - name: install docker
+    command: sudo apt-get -y install docker-ce
+
+  - name: add user mod
+    command: sudo usermod -aG docker {{action_user}}
+
+  - name: add permissions to docker sock for ruby
+    become: true
+    file:
+      path: /var/run/docker.sock
+      owner: "{{ ansible_user }}"
+      group: docker
+      mode: 0644
