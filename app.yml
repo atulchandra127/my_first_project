@@ -11,10 +11,8 @@
 
  - name: install docker
    hosts: atul1
-   roles:
-    - common/docker
+   roles: common/docker
 
  - name: install nodejs
    hosts: atul1
-   roles:
-     - common/node
+   roles: common/node
